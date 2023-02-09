@@ -23,14 +23,16 @@
 #pragma once
 
 #include <iterator>
+#include <cassert>
 
 namespace Kewl {
 
     class Counter {
     private:
         class iterator {
-
-            long m_num;
+            long m_start = 0;
+            long m_end = 0;
+            long m_num = 0;
             bool m_rev = false;
         public:
             using iterator_category = std::forward_iterator_tag;
@@ -39,9 +41,15 @@ namespace Kewl {
             using pointer           = const long*;
             using reference         = long;
 
-            explicit iterator( value_type _num = 0, bool _rev = 0 ) : m_num( _num ), m_rev( _rev ) {}
+            iterator() = default;
+            explicit iterator( value_type _num, value_type _start, value_type _end, bool _rev = 0 ) : m_num( _num ), m_start( _start ), m_end( _end ), m_rev( _rev ) {}
 
-            iterator& operator++() { m_num = m_rev ? m_num - 1 : m_num + 1; return *this; }
+            iterator& operator++() {
+                assert( m_num >= std::min( m_start, m_end ) && "Out of range: less than the min bound!" );
+                assert( m_num <= std::max( m_start, m_end ) && "Out of range: greater than the max bound!" );
+                m_num = m_rev ? m_num - 1 : m_num + 1;
+                return *this;
+            }
             iterator operator++( int ) { iterator retval = *this; ++(*this); return retval; }
             bool operator==( iterator other ) const { return m_num == other.m_num; }
             bool operator!=( iterator other ) const { return !(*this == other); }
@@ -53,14 +61,14 @@ namespace Kewl {
         long m_end = 0;
     public:
         using Iterator = iterator;
-        Iterator begin() { return Iterator( m_start, m_rev ); }
-        Iterator first() { return Iterator( m_start, m_rev ); }
-        Iterator last() { return Iterator( m_end, m_rev ); }
-        Iterator end() { return Iterator( (m_rev ? m_end - 1 : m_end + 1), m_rev ); }
-        Iterator rbegin() { return Iterator( m_end, !m_rev ); }
-        Iterator rfirst() { return Iterator( m_end, !m_rev ); }
-        Iterator rlast() { return Iterator( m_start, !m_rev ); }
-        Iterator rend() { return Iterator( (!m_rev ? m_start - 1 : m_start + 1), !m_rev ); }
+        Iterator begin()  { return Iterator( m_start, m_start, m_end, m_rev ); }
+        Iterator first()  { return Iterator( m_start, m_start, m_end, m_rev ); }
+        Iterator last()   { return Iterator( m_end, m_start, m_end, m_rev ); }
+        Iterator end()    { return Iterator( (m_rev ? m_end - 1 : m_end + 1), m_start, m_end, m_rev ); }
+        Iterator rbegin() { return Iterator( m_end, m_end, m_start, !m_rev ); }
+        Iterator rfirst() { return Iterator( m_end, m_end, m_start, !m_rev ); }
+        Iterator rlast()  { return Iterator( m_start, m_start, m_end, !m_rev ); }
+        Iterator rend()   { return Iterator( (!m_rev ? m_start - 1 : m_start + 1), m_start, m_end, !m_rev ); }
 
         Counter() = delete;
         Counter( long _end ) :

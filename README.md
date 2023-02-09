@@ -31,7 +31,8 @@ be other solutions but this one seems to be the easiest solution that I
 could come up with at the time.
 
 ## TODO's
-1) Test and handle boundry conditions of the bounds passed in.
+~~1) Test and handle boundry conditions of the bounds passed in.~~
+Now behaves like the vector class and only asserts during debug build.
 
 ## Usage:
     1. Place the header file in you project.

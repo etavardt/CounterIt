@@ -95,5 +95,22 @@ int main()
 	std::for_each( countMinus10a.rbegin(), countMinus10a.rend(), []( const int& i ) { std::cout << " " << i; } );
 	std::cout << std::endl;
 
+	// Prefix end bound test.
+	it = count.last();
+	std::cout << std::endl << "Prefix increment test." << std::endl;
+	std::cout << "before ++it:" << *it << std::endl;
+	++it;
+	std::cout << "after ++it:" << *it << std::endl;
+
+#include <vector>
+	std::vector<int> vi{ 1,2 };
+	std::vector<int>::iterator vit = vi.last();
+	std::cout << std::endl << "Prefix increment test." << std::endl;
+	std::cout << "before ++it:" << *vit << std::endl;
+	++vit;
+	std::cout << "after ++it:" << *vit << std::endl;
+
+
+
 	return 0;
 }
