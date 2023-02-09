@@ -1,0 +1,95 @@
+﻿// CounterIt.h : Include file for standard system include files,
+// or project specific include files.
+
+#pragma once
+
+#include <iterator>
+
+namespace Kewl {
+
+    class Counter {
+    private:
+        //template<class T>
+        // member typedefs provided through inheriting from std::iterator
+        //class iterator : public std::iterator<
+        //    std::input_iterator_tag,   // iterator_category
+        //    long,                      // value_type
+        //    long,                      // difference_type
+        //    const long*,               // pointer
+        //    long                       // reference
+        //> {
+        class iterator {
+
+            long m_num;
+            bool m_rev = false;
+        public:
+            //using iterator_category = std::input_iterator_tag;
+            using iterator_category = std::forward_iterator_tag;
+            using difference_type   = std::ptrdiff_t;
+            using value_type        = long;
+            using pointer           = const long*;
+            using reference         = long;
+
+            explicit iterator( value_type _num = 0, bool _rev = 0 ) : m_num( _num ), m_rev( _rev ) {}
+
+            iterator& operator++() { m_num = m_rev ? m_num - 1 : m_num + 1; return *this; }
+            iterator operator++( int ) { iterator retval = *this; ++(*this); return retval; }
+            bool operator==( iterator other ) const { return m_num == other.m_num; }
+            bool operator!=( iterator other ) const { return !(*this == other); }
+            reference operator*() const { return m_num; }
+        };
+
+        //template<class T>
+        //class iterator {
+
+        //    //using iterator_category = std::input_iterator_tag;
+        //    using iterator_category = std::forward_iterator_tag;
+        //    using difference_type   = std::ptrdiff_t;
+        //    using value_type        = T;
+        //    using pointer           = T*;
+        //    using reference         = T&;
+
+        //    T m_num;
+        //    bool m_rev = false;
+        //public:
+        //    explicit iterator( value_type _num = 0, bool _rev = 0 ) : m_num( _num ), m_rev(_rev) {}
+
+        //    iterator& operator++() { m_num = m_rev ? m_num - 1 : m_num + 1; return *this; }
+        //    iterator operator++( int ) { iterator retval = *this; ++(*this); return retval; }
+        //    bool operator==( iterator other ) const { return m_num == other.m_num; }
+        //    bool operator!=( iterator other ) const { return !(*this == other); }
+        //    reference operator*() const { return *m_num; }
+        //};
+   
+        bool m_rev = false;
+        long m_start = 0;
+        long m_end = 0;
+    public:
+        //using Iterator = iterator<long>;
+        using Iterator = iterator;
+        Iterator begin() { return Iterator( m_start, m_rev ); }
+        Iterator first() { return Iterator( m_start, m_rev ); }
+        Iterator last() { return Iterator( m_end, m_rev ); }
+        Iterator end() { return Iterator( (m_rev ? m_end - 1 : m_end + 1), m_rev ); }
+        Iterator rbegin() { return Iterator( m_end, !m_rev ); }
+        Iterator rfirst() { return Iterator( m_end, !m_rev ); }
+        Iterator rlast() { return Iterator( m_start, !m_rev ); }
+        Iterator rend() { return Iterator( (!m_rev ? m_start - 1 : m_start + 1), !m_rev ); }
+
+        Counter() = delete;
+        Counter( long _end ) :
+            m_start( 0 ),
+            m_end( _end ),
+            m_rev( 0 > _end ) {}
+        Counter( long _start, long _end ) :
+            m_start( _start ),
+            m_end( _end ),
+            m_rev( _start > _end ) {}
+        ~Counter() {};
+        Counter( const Counter& ) = delete;
+        Counter( const Counter&& ) = delete;
+        const Counter& operator=( const Counter& ) = delete;
+        const Counter& operator=( const Counter&& ) = delete;
+    };
+}
+
