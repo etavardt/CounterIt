@@ -1,5 +1,24 @@
-﻿// CounterIt.h : Include file for standard system include files,
-// or project specific include files.
+﻿// CounterIt.hpp
+//
+// Author: Thomas C. Etavard (https://github.com/etavardt)
+// Date: 02/07/2023
+// 
+// GitHub link: https://github.com/etavardt/CounterIt
+//
+// An iterator that counts instead of iterating over objects.
+//
+// Usage:
+//     // One Example:
+//     #include <execution>
+//     #include "CounterIt.hpp"
+//     ...
+//     Kewl::Counter count( startValue, endValue );
+//     std::for_each(std::execution::par, count.begin(), count.end(), []( const int& i ) { std::cout << " " << i; });
+// 
+// This could return an out of order count since it is a for_each loop where the tasks are ran in parrallel asynchronous
+// but each task needs to know the value(i in this case) it will work with. Do not use this for_each if you need the 
+// order to be synchronous.
+//
 
 #pragma once
 
@@ -9,21 +28,11 @@ namespace Kewl {
 
     class Counter {
     private:
-        //template<class T>
-        // member typedefs provided through inheriting from std::iterator
-        //class iterator : public std::iterator<
-        //    std::input_iterator_tag,   // iterator_category
-        //    long,                      // value_type
-        //    long,                      // difference_type
-        //    const long*,               // pointer
-        //    long                       // reference
-        //> {
         class iterator {
 
             long m_num;
             bool m_rev = false;
         public:
-            //using iterator_category = std::input_iterator_tag;
             using iterator_category = std::forward_iterator_tag;
             using difference_type   = std::ptrdiff_t;
             using value_type        = long;
@@ -39,33 +48,10 @@ namespace Kewl {
             reference operator*() const { return m_num; }
         };
 
-        //template<class T>
-        //class iterator {
-
-        //    //using iterator_category = std::input_iterator_tag;
-        //    using iterator_category = std::forward_iterator_tag;
-        //    using difference_type   = std::ptrdiff_t;
-        //    using value_type        = T;
-        //    using pointer           = T*;
-        //    using reference         = T&;
-
-        //    T m_num;
-        //    bool m_rev = false;
-        //public:
-        //    explicit iterator( value_type _num = 0, bool _rev = 0 ) : m_num( _num ), m_rev(_rev) {}
-
-        //    iterator& operator++() { m_num = m_rev ? m_num - 1 : m_num + 1; return *this; }
-        //    iterator operator++( int ) { iterator retval = *this; ++(*this); return retval; }
-        //    bool operator==( iterator other ) const { return m_num == other.m_num; }
-        //    bool operator!=( iterator other ) const { return !(*this == other); }
-        //    reference operator*() const { return *m_num; }
-        //};
-   
         bool m_rev = false;
         long m_start = 0;
         long m_end = 0;
     public:
-        //using Iterator = iterator<long>;
         using Iterator = iterator;
         Iterator begin() { return Iterator( m_start, m_rev ); }
         Iterator first() { return Iterator( m_start, m_rev ); }
@@ -91,5 +77,4 @@ namespace Kewl {
         const Counter& operator=( const Counter& ) = delete;
         const Counter& operator=( const Counter&& ) = delete;
     };
-}
-
+} // namespace Kewl

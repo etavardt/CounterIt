@@ -31,7 +31,7 @@ be other solutions but this one seems to be the easiest solution that I
 could come up with at the time.
 
 ## TODO's
-1) Test and handle boundry conditions.
+1) Test and handle boundry conditions of the bounds passed in.
 
 ## Usage:
     1. Place the header file in you project.
@@ -95,7 +95,7 @@ could come up with at the time.
 
     The bounds are inclusive, so when dealing with a zero based range like
     the width of an image the width is always the value of the count of items
-    and you need to pass width - 1 as one of the bounds or you will have undefined
+    and you need to pass (width - 1) as one of the bounds or you will have undefined
     results.  It is up to you to ensure that the resulting range is within your
     bound needs.
 
